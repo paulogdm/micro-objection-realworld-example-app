@@ -1,27 +1,11 @@
-const bcrypt = require('bcrypt')
-
 const { Model } = require('objection')
-
-const hashPassword = async (pass) => {
-  return bcrypt.hash(pass, 10)
-}
 
 class User extends Model {
   static get tableName () {
-    return 'User'.toLowerCase()
-  }
-
-  async $beforeInsert () {
-    this.hashed_password = await hashPassword(this.password)
-    delete this.password
+    return 'Users'.toLowerCase()
   }
 
   async $beforeUpdate () {
-    if (this.password) {
-      this.hashed_password = await hashPassword(this.password)
-      delete this.password
-    }
-
     this.updatedAt = new Date().toISOString()
   }
 
@@ -31,15 +15,14 @@ class User extends Model {
     return json
   }
 
-  static get idColumn () {
-    return 'username'
-  }
-
   static get jsonSchema () {
     return {
       type: 'object',
       required: ['username', 'email', 'hashed_password'],
       properties: {
+        id: {
+          type: 'integer'
+        },
         username: {
           type: 'string',
           minLength: 1,

@@ -7,6 +7,9 @@ module.exports = {
       database: '',
       user: '',
       password: '',
+      db: 'users',
+      database: 'users',
+      user: 'root',
       charset: 'utf8',
       ssl: 'Amazon RDS'
     },
