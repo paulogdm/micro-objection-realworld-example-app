@@ -2,11 +2,10 @@ const jwt = require('jsonwebtoken')
 
 const secret = 'myrealworldappsecret'
 
-const createJwt = async ({username, email, id}) => {
+const createJwt = async ({username, email}) => {
   const newToken = jwt.sign({
     username,
-    email,
-    id
+    email
   }, secret, { expiresIn: '14d' })
 
   return newToken

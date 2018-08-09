@@ -74,7 +74,7 @@ const patchUser = async (req, res) => {
     delete user.password
   }
 
-  const patchedUser = await User.query().patchAndFetchById(jwt.id, user)
+  const patchedUser = await User.query().patchAndFetchById(jwt.username, user)
 
   return {user: patchedUser}
 }
@@ -86,7 +86,7 @@ const getUser = async (req, res) => {
     throw new UnauthorizedError()
   }
 
-  const selectedUser = await User.query().findById(jwt.id)
+  const selectedUser = await User.query().findById(jwt.username)
 
   if (!selectedUser) {
     throw new NotFoundError()

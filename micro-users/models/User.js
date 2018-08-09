@@ -15,18 +15,19 @@ class User extends Model {
     return json
   }
 
+  static get idColumn () {
+    return 'username'
+  }
+
   static get jsonSchema () {
     return {
       type: 'object',
       required: ['username', 'email', 'hashed_password'],
       properties: {
-        id: {
-          type: 'integer'
-        },
         username: {
           type: 'string',
           minLength: 1,
-          maxLength: 255
+          maxLength: 20
         },
         email: {
           type: 'string',
