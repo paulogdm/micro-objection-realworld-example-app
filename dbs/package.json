@@ -1,0 +1,12 @@
+{
+  "name": "micro-users",
+  "version": "1.0.0",
+  "description": "Migration helper for adapters",
+  "main": "",
+  "author": "paulogdm",
+  "license": "MIT",
+  "dependencies": {
+    "knex": "^0.15.2",
+    "mysql": "^2.16.0"
+  }
+}

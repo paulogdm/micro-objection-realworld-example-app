@@ -3,13 +3,10 @@ module.exports = {
     client: 'mysql',
     connection: {
       host: '',
-      db: '',
-      database: '',
-      user: '',
-      password: '',
       db: 'users',
       database: 'users',
       user: 'root',
+      password: '',
       charset: 'utf8',
       ssl: 'Amazon RDS'
     },

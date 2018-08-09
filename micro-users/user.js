@@ -20,6 +20,10 @@ const comparePassword = async (pass, hash) => {
   return bcrypt.compare(pass, hash)
 }
 
+const hashPassword = async (pass) => {
+  return bcrypt.hash(pass, 10)
+}
+
 const login = async (req, res) => {
   const { user } = await json(req)
 
@@ -40,15 +44,20 @@ const login = async (req, res) => {
 
   const token = await createJwt(fetchedUser)
 
-  return Object.assign(fetchedUser.toJSON(), token)
+  return {user: Object.assign(fetchedUser.toJSON(), {token})}
 }
 
 const createUser = async (req, res) => {
   const { user } = await json(req)
 
+  user.hashed_password = await hashPassword(user.password)
+  delete user.password
+
   const newUser = await User.query().insert(user)
 
-  return newUser
+  const token = await createJwt(newUser)
+
+  return {user: Object.assign(newUser.toJSON(), {token})}
 }
 
 const patchUser = async (req, res) => {
@@ -60,9 +69,14 @@ const patchUser = async (req, res) => {
 
   const { user } = await json(req)
 
+  if (user.password) {
+    user.hashed_password = await hashPassword(user.password)
+    delete user.password
+  }
+
   const patchedUser = await User.query().patchAndFetchById(jwt.username, user)
 
-  return patchedUser
+  return {user: patchedUser}
 }
 
 const getUser = async (req, res) => {
@@ -72,13 +86,13 @@ const getUser = async (req, res) => {
     throw new UnauthorizedError()
   }
 
-  const selectedUser = await User.query().fetchById(jwt.username)
+  const selectedUser = await User.query().findById(jwt.username)
 
   if (!selectedUser) {
     throw new NotFoundError()
   }
 
-  return selectedUser
+  return {user: selectedUser}
 }
 
 module.exports = {
