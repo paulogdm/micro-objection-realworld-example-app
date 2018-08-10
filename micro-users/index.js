@@ -1,5 +1,11 @@
 // external libs
-const { router, get, post, put } = require('microrouter')
+const {
+  router,
+  get,
+  post,
+  put,
+  del
+} = require('microrouter')
 const { send } = require('micro')
 const { Model } = require('objection')
 
@@ -22,20 +28,35 @@ const {
   getUser
 } = require('./user')
 
-const SERVICE_ENTRYPOINT = '/users'
+// profiles action
+const { getProfile } = require('./profile')
+
+// follow actions
+const {
+  getFollow,
+  newFollow,
+  delFollow
+} = require('./profile')
 
 const notFound = async (req, res) => send(res, 404, 'Not Found')
 
 module.exports = handleErrors(
   router(
-    post(`${SERVICE_ENTRYPOINT}/login`, login),
+    post('/users/login', login),
 
-    post(`${SERVICE_ENTRYPOINT}`, createUser),
-    put(`${SERVICE_ENTRYPOINT}`, patchUser),
-    get(`${SERVICE_ENTRYPOINT}`, getUser),
+    post('/users', createUser),
+    put('/users', patchUser),
+    get('/users', getUser),
+
+    get('/profiles/:username', getProfile),
+
+    get('/profiles/:username/follow', getFollow),
+    post('/profiles/:username/follow', newFollow),
+    del('/profiles/:username/follow', delFollow),
 
     get('/*', notFound),
     post('/*', notFound),
-    put('/*', notFound)
+    put('/*', notFound),
+    del('/*', notFound)
   )
 )

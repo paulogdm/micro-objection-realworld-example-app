@@ -56,6 +56,25 @@ class User extends Model {
       }
     }
   }
+
+  static get relationMappings () {
+    const Follower = require('./Follower')
+    return {
+      follower: {
+        relation: Model.ManyToManyRelation,
+        modelClass: User,
+        join: {
+          from: `${this.tableName}.id`,
+          through: {
+            modelClass: Follower,
+            from: `${Follower.tableName}.follower`,
+            to: `${Follower.tableName}.user`
+          },
+          to: `${this.tableName}.id`
+        }
+      }
+    }
+  }
 }
 
 module.exports = User

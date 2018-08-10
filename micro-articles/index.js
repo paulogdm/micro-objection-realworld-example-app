@@ -16,20 +16,16 @@ Model.knex(knex)
 
 // user actions
 const {
-  getProfile,
-  newFollow,
-  delFollow
-} = require('./profile')
-
-const SERVICE_ENTRYPOINT = '/profiles'
+  createArticle,
+  getArticles
+} = require('./article')
 
 const notFound = async (req, res) => send(res, 404, 'Not Found')
 
 module.exports = handleErrors(
   router(
-    get(`${SERVICE_ENTRYPOINT}/:username`, getProfile),
-    post(`${SERVICE_ENTRYPOINT}/:username/follow`, newFollow),
-    del(`${SERVICE_ENTRYPOINT}/:username/follow`, delFollow),
+    post('/articles', createArticle),
+    get('/articles', getArticles),
 
     get('/*', notFound),
     post('/*', notFound),

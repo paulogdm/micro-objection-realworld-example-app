@@ -3,8 +3,8 @@ module.exports = {
     client: 'mysql',
     connection: {
       host: 'realworldapp.cgzvcdvzxooo.us-east-1.rds.amazonaws.com',
-      db: 'users',
-      database: 'users',
+      db: 'articles',
+      database: 'articles',
       user: 'root',
       password: 'hRDm1XpOHKsyynnjPJcGUBLzeLLaIqsk',
       charset: 'utf8',

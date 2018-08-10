@@ -1,55 +1,42 @@
 const { Model } = require('objection')
 
-class User extends Model {
+class Article extends Model {
   static get tableName () {
-    return 'Users'.toLowerCase()
+    return 'Articles'.toLowerCase()
   }
 
   async $beforeUpdate () {
     this.updatedAt = new Date().toISOString()
   }
 
-  $formatJson (json) {
-    json = super.$formatJson(json)
-    delete json.hashed_password
-    return json
-  }
-
-  static get idColumn () {
-    return 'username'
-  }
-
   static get jsonSchema () {
     return {
       type: 'object',
-      required: ['username', 'email', 'hashed_password'],
+      required: ['author', 'slug'],
       properties: {
-        username: {
+        author: {
           type: 'string',
           minLength: 1,
           maxLength: 20
         },
-        email: {
-          type: 'string',
-          minLength: 0,
-          maxLength: 255
-        },
-        hashed_password: {
+        slug: {
           type: 'string',
           minLength: 1,
           maxLength: 255
         },
-        bio: {
+        title: {
+          type: ['string', 'null'],
+          minLength: 0,
+          maxLength: 255
+        },
+        description: {
           type: ['string', 'null'],
           minLength: 0,
           maxLength: 255,
           default: ''
         },
-        image: {
-          type: ['string', 'null'],
-          minLength: 0,
-          maxLength: 255,
-          default: ''
+        body: {
+          type: ['string', 'null']
         },
         createdAt: {type: 'string'},
         updatedAt: {type: 'string'}
@@ -58,23 +45,22 @@ class User extends Model {
   }
 
   static get relationMappings () {
-    const Follower = require('./Follower')
+    const Tag = require('./Tag')
     return {
-      follower: {
+      tags: {
         relation: Model.ManyToManyRelation,
-        modelClass: User,
+        modelClass: Tag,
         join: {
-          from: `${this.tableName}.id`,
+          from: 'articles.id',
           through: {
-            modelClass: Follower,
-            from: `${Follower.tableName}.follower`,
-            to: `${Follower.tableName}.user`
+            from: 'articles_tags.article',
+            to: 'articles_tags.tag'
           },
-          to: `${this.tableName}.id`
+          to: 'tags.id'
         }
       }
     }
   }
 }
 
-module.exports = User
+module.exports = Article
