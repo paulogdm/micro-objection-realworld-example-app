@@ -33,7 +33,9 @@ const getFeed = async (req, res) => {
     feedQuery
       .limit(limit)
       .offset(offset)
-      .orderBy('createdAt', 'desc'),
+      .orderBy('createdAt', 'desc')
+      .eager('author(profile)')
+      .context({jwt}),
     feedQuery
       .resultSize()
   ])

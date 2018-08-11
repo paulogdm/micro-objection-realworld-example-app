@@ -27,7 +27,9 @@ const hashPassword = async (pass) => {
 const login = async (req, res) => {
   const { user } = await json(req)
 
-  const [fetchedUser] = await User.query().where('email', user.email)
+  const [fetchedUser] = await User
+    .query()
+    .where('email', user.email)
 
   if (!fetchedUser) {
     // instead of NotFound, we throw unauthorized because we don't
@@ -53,7 +55,9 @@ const createUser = async (req, res) => {
   user.hashed_password = await hashPassword(user.password)
   delete user.password
 
-  const newUser = await User.query().insert(user)
+  const newUser = await User
+    .query()
+    .insert(user)
 
   const token = await createJwt(newUser)
 
@@ -74,7 +78,9 @@ const patchUser = async (req, res) => {
     delete user.password
   }
 
-  const patchedUser = await User.query().patchAndFetchById(jwt.username, user)
+  const patchedUser = await User
+    .query()
+    .patchAndFetchById(jwt.username, user)
 
   return {user: patchedUser}
 }
@@ -86,7 +92,9 @@ const getUser = async (req, res) => {
     throw new UnauthorizedError()
   }
 
-  const selectedUser = await User.query().findById(jwt.username)
+  const selectedUser = await User
+    .query()
+    .findById(jwt.id)
 
   if (!selectedUser) {
     throw new NotFoundError()

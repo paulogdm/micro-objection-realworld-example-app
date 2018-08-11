@@ -121,18 +121,80 @@ const getArticles = async (req, res) => {
   const limit = queryParsed.limit || 20
   const offset = queryParsed.offset || 0
 
+  const jwt = await verifyJwt(req)
+
   const [articles, articlesCount] = await Promise.all([
     queryArticle
       .limit(limit)
       .offset(offset)
-      .orderBy('createdAt', 'desc'),
+      .orderBy('createdAt', 'desc')
+      .eager('author(profile)')
+      .context({jwt}),
     queryArticle.resultSize()
   ])
 
   return { articles, articlesCount }
 }
 
+const updateBySlug = async (req, res) => {
+  const jwt = await verifyJwt(req)
+  const { slug } = req.params
+
+  const oldArticle = await Article
+    .query()
+    .findOne('slug', slug)
+
+  if (!oldArticle) {
+    throw new NotFoundError()
+  }
+
+  if (oldArticle.author !== jwt.id) {
+    throw new UnauthorizedError()
+  }
+
+  const { article } = await json(req)
+
+  oldArticle.tags = await handleTagList(article.tagList)
+
+  if (oldArticle.title !== article.title) {
+    oldArticle.title = await slugMe(article.title)
+    oldArticle.slug = await slugMe(article.title)
+  }
+
+  oldArticle.description = article.description || oldArticle.description
+  oldArticle.body = article.body || oldArticle.body
+
+  const { id } = await Article
+    .query()
+    .upsertGraph(
+      oldArticle, {
+        relate: true,
+        unrelate: true
+      })
+
+  return 'OK'
+}
+
+const getBySlug = async (req, res) => {
+  const jwt = await verifyJwt(req)
+  const { slug } = req.params
+
+  const article = await Article
+    .query()
+    .findOne('slug', slug)
+    .eager('author(profile)')
+    .context({jwt})
+
+  if (!article) {
+    throw new NotFoundError()
+  }
+
+  return {article}
+}
+
 module.exports = {
   createArticle,
-  getArticles
+  getArticles,
+  updateBySlug,
+  getBySlug
 }

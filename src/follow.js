@@ -26,7 +26,7 @@ const delFollow = async (req, res) => {
   }
 
   await dontWantToFollow
-    .$relatedQuery('following')
+    .$relatedQuery('follower')
     .unrelate()
     .where('id', jwt.id)
 
@@ -48,8 +48,8 @@ const newFollow = async (req, res) => {
     throw new NotFoundError()
   }
 
-  return wantToFollow
-    .$relatedQuery('following')
+  await wantToFollow
+    .$relatedQuery('follower')
     .relate(jwt.id)
 
   return 'OK'

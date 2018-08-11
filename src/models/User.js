@@ -12,6 +12,7 @@ class User extends Model {
   $formatJson (json) {
     json = super.$formatJson(json)
     delete json.hashed_password
+    json.following = !!json.following
     return json
   }
 
@@ -52,6 +53,30 @@ class User extends Model {
         },
         createdAt: {type: 'string'},
         updatedAt: {type: 'string'}
+      }
+    }
+  }
+
+  static get namedFilters () {
+    return {
+      profile: builder => {
+        const {jwt} = builder.context()
+
+        if (jwt) {
+          builder.select(
+            User
+              .relatedQuery('follower')
+              .findOne('id', jwt.id)
+              .count()
+              .as('following')
+          )
+        }
+
+        return builder.select([
+          'users.username',
+          'users.bio',
+          'users.image'
+        ])
       }
     }
   }

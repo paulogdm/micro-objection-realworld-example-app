@@ -15,10 +15,10 @@ class User extends Model {
       required: ['user', 'follower'],
       properties: {
         user: {
-          type: 'string'
+          type: 'integer'
         },
         follower: {
-          type: 'string'
+          type: 'integer'
         }
       }
     }

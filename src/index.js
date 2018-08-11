@@ -42,7 +42,8 @@ const {
 // articles actions
 const {
   createArticle,
-  getArticles
+  getArticles,
+  getBySlug
 } = require('./article')
 
 // feed action
@@ -69,6 +70,7 @@ module.exports = handleErrors(
     get('/articles', getArticles),
 
     get('/articles/feed', getFeed),
+    get('/articles/:slug', getBySlug),
 
     get('/*', notFound),
     post('/*', notFound),
