@@ -15,9 +15,7 @@ class Article extends Model {
       required: ['userId', 'slug'],
       properties: {
         userId: {
-          type: 'string',
-          minLength: 1,
-          maxLength: 20
+          type: 'integer'
         },
         slug: {
           type: 'string',
@@ -52,20 +50,20 @@ class Article extends Model {
         relation: Model.ManyToManyRelation,
         modelClass: Tag,
         join: {
-          from: 'articles.id',
+          from: `${this.tableName}.id`,
           through: {
             from: 'articles_tags.articleId',
             to: 'articles_tags.tagId'
           },
-          to: 'tags.id'
+          to: `${Tag.tableName}.id`
         }
       },
       author: {
         relation: Model.BelongsToOneRelation,
         modelClass: User,
         join: {
-          from: 'article.userId',
-          to: 'user.id'
+          from: `${this.tableName}.userId`,
+          to: `${User.tableName}.id`
         }
       }
     }

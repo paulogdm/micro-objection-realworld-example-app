@@ -77,7 +77,7 @@ const createArticle = async (req, res) => {
   }
 
   newArticle.slug = await slugMe(article.title)
-  newArticle.author = jwt.username
+  newArticle.userId = jwt.id
 
   newArticle.tags = await handleTagList(article.tagList)
 
@@ -100,7 +100,8 @@ const handleQueryString = (queryBuilder, {tag, author, favorited}) => {
 
   if (author) {
     queryBuilder
-      .where('author', author)
+      .joinRelation('author')
+      .where('users.username', author)
   }
 
   if (favorited) {
@@ -120,7 +121,7 @@ const getArticles = async (req, res) => {
   const limit = queryParsed.limit || 20
   const offset = queryParsed.offset || 0
 
-  const [articles, total] = await Promise.all([
+  const [articles, articlesCount] = await Promise.all([
     queryArticle
       .limit(limit)
       .offset(offset)
@@ -128,7 +129,7 @@ const getArticles = async (req, res) => {
     queryArticle.resultSize()
   ])
 
-  return { articles, total }
+  return { articles, articlesCount }
 }
 
 module.exports = {

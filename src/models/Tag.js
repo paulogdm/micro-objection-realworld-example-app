@@ -10,6 +10,9 @@ class Tag extends Model {
       type: 'object',
       required: ['tag'],
       properties: {
+        id: {
+          type: 'integer'
+        },
         tag: {
           type: 'string',
           minLength: 1,
@@ -26,12 +29,12 @@ class Tag extends Model {
         relation: Model.ManyToManyRelation,
         modelClass: Article,
         join: {
-          from: 'tags.id',
+          from: `${this.tableName}.id`,
           through: {
             from: 'articles_tags.tagId',
             to: 'articles_tags.articleId'
           },
-          to: 'articles.id'
+          to: `${Article.tableName}.id`
         }
       }
     }

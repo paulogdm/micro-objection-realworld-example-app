@@ -4,7 +4,7 @@ const { verifyJwt } = require('./jwt')
 // node's querystyring lib
 const querystring = require('querystring')
 
-// follower model
+// article model
 const Article = require('./models/Article')
 
 // errors
@@ -29,7 +29,7 @@ const getFeed = async (req, res) => {
   const limit = queryParsed.limit || 20
   const offset = queryParsed.offset || 0
 
-  const [articles, total] = await Promise.all([
+  const [articles, articlesCount] = await Promise.all([
     feedQuery
       .limit(limit)
       .offset(offset)
@@ -38,7 +38,7 @@ const getFeed = async (req, res) => {
       .resultSize()
   ])
 
-  return { articles, total }
+  return { articles, articlesCount }
 }
 
 module.exports = {

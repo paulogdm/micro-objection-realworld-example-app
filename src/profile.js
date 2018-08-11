@@ -19,16 +19,15 @@ const getProfile = async (req, res) => {
     throw new UnauthorizedError()
   }
 
-  const [selectedUser, isRelated] = await Promise.all([
-    User
-      .query()
-      .findById(req.params.username)
-      .pick(['username', 'bio', 'image']),
+  const selectedUser = await User
+    .query()
+    .findOne('username', req.params.username)
 
-    Follower
-      .query()
-      .findById([req.params.username, jwt.username])
-  ])
+  const isRelated = await selectedUser
+    .$relatedQuery('follower')
+    .where('id', jwt.id).debug()
+
+  console.info(isRelated)
 
   selectedUser.following = !!isRelated
 

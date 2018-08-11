@@ -15,15 +15,14 @@ class User extends Model {
     return json
   }
 
-  static get idColumn () {
-    return 'username'
-  }
-
   static get jsonSchema () {
     return {
       type: 'object',
       required: ['username', 'email', 'hashed_password'],
       properties: {
+        id: {
+          type: 'integer'
+        },
         username: {
           type: 'string',
           minLength: 1,
@@ -61,6 +60,19 @@ class User extends Model {
     const Follower = require('./Follower')
     return {
       follower: {
+        relation: Model.ManyToManyRelation,
+        modelClass: User,
+        join: {
+          from: `${this.tableName}.id`,
+          through: {
+            modelClass: Follower,
+            from: `${Follower.tableName}.user`,
+            to: `${Follower.tableName}.follower`
+          },
+          to: `${this.tableName}.id`
+        }
+      },
+      following: {
         relation: Model.ManyToManyRelation,
         modelClass: User,
         join: {

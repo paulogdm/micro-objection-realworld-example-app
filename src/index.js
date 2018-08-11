@@ -35,7 +35,6 @@ const { getProfile } = require('./profile')
 
 // follow actions
 const {
-  getFollow,
   newFollow,
   delFollow
 } = require('./follow')
@@ -45,6 +44,11 @@ const {
   createArticle,
   getArticles
 } = require('./article')
+
+// feed action
+const {
+  getFeed
+} = require('./feed')
 
 const notFound = async (req, res) => send(res, 404, 'Not Found')
 
@@ -58,12 +62,13 @@ module.exports = handleErrors(
 
     get('/profiles/:username', getProfile),
 
-    get('/profiles/:username/follow', getFollow),
     post('/profiles/:username/follow', newFollow),
     del('/profiles/:username/follow', delFollow),
 
     post('/articles', createArticle),
     get('/articles', getArticles),
+
+    get('/articles/feed', getFeed),
 
     get('/*', notFound),
     post('/*', notFound),
