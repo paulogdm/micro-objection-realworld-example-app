@@ -5,6 +5,11 @@ class Tag extends Model {
     return 'Tags'.toLowerCase()
   }
 
+  $formatJson (json) {
+    json = super.$formatJson(json)
+    return json.tag
+  }
+
   static get jsonSchema () {
     return {
       type: 'object',
@@ -37,6 +42,12 @@ class Tag extends Model {
           to: `${Article.tableName}.id`
         }
       }
+    }
+  }
+
+  static get namedFilters () {
+    return {
+      pluckTag: builder => builder.pluck('tag')
     }
   }
 }

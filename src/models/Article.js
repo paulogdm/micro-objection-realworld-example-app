@@ -9,6 +9,12 @@ class Article extends Model {
     this.updatedAt = new Date().toISOString()
   }
 
+  $formatJson (json) {
+    json = super.$formatJson(json)
+    json.favorited = !!json.favorited
+    return json
+  }
+
   static get jsonSchema () {
     return {
       type: 'object',
@@ -45,6 +51,9 @@ class Article extends Model {
   static get relationMappings () {
     const Tag = require('./Tag')
     const User = require('./User')
+    const Favorite = require('./Favorite')
+    const ArticleTags = require('./ArticleTags')
+    const Comment = require('./Comment')
     return {
       tags: {
         relation: Model.ManyToManyRelation,
@@ -52,8 +61,8 @@ class Article extends Model {
         join: {
           from: `${this.tableName}.id`,
           through: {
-            from: 'articles_tags.articleId',
-            to: 'articles_tags.tagId'
+            from: `${ArticleTags.tableName}.articleId`,
+            to: `${ArticleTags.tableName}.tagId`
           },
           to: `${Tag.tableName}.id`
         }
@@ -65,7 +74,53 @@ class Article extends Model {
           from: `${this.tableName}.userId`,
           to: `${User.tableName}.id`
         }
+      },
+      favoritedBy: {
+        relation: Model.ManyToManyRelation,
+        modelClass: User,
+        join: {
+          from: `${this.tableName}.id`,
+          through: {
+            modelClass: Favorite,
+            from: `${Favorite.tableName}.articleId`,
+            to: `${Favorite.tableName}.userId`
+          },
+          to: `${User.tableName}.id`
+        }
+      },
+      comments: {
+        relation: Model.HasManyRelation,
+        modelClass: Comment,
+        join: {
+          from: `${this.tableName}.id`,
+          to: `${Comment.tableName}.articleId`
+        }
       }
+    }
+  }
+
+  static get namedFilters () {
+    return {
+      favorited: builder => {
+        const {jwt} = builder.context()
+
+        if (jwt) {
+          builder.select(
+            Article.relatedQuery('favoritedBy')
+              .select('articleId')
+              .where('userId', jwt.id)
+              .as('favorited')
+          )
+        }
+
+        return builder
+      },
+      favoritesCount: builder => builder.select(
+        Article.relatedQuery('favoritedBy')
+          .count()
+          .as('favoritesCount')
+      ),
+      allFields: builder => builder.select('articles.*')
     }
   }
 }

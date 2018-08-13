@@ -10,6 +10,18 @@ const {
   NotFoundError
 } = require('./error')
 
+const findByUsername = async (username) => {
+  const user = await User
+    .query()
+    .findOne('username', username)
+
+  if (!user) {
+    throw new NotFoundError()
+  }
+
+  return user
+}
+
 const delFollow = async (req, res) => {
   const jwt = await verifyJwt(req)
 
@@ -17,13 +29,7 @@ const delFollow = async (req, res) => {
     throw new UnauthorizedError()
   }
 
-  const dontWantToFollow = await User
-    .query()
-    .findOne('username', req.params.username)
-
-  if (!dontWantToFollow) {
-    throw new NotFoundError()
-  }
+  const dontWantToFollow = await findByUsername(req.params.username)
 
   await dontWantToFollow
     .$relatedQuery('follower')
@@ -40,13 +46,7 @@ const newFollow = async (req, res) => {
     throw new UnauthorizedError()
   }
 
-  const wantToFollow = await User
-    .query()
-    .findOne('username', req.params.username)
-
-  if (!wantToFollow) {
-    throw new NotFoundError()
-  }
+  const wantToFollow = await findByUsername(req.params.username)
 
   await wantToFollow
     .$relatedQuery('follower')

@@ -1,23 +1,23 @@
 const { Model } = require('objection')
 
-class Follower extends Model {
+class Favorite extends Model {
   static get tableName () {
-    return 'Followers'.toLowerCase()
+    return 'Favorites'.toLowerCase()
   }
 
   static get idColumn () {
-    return ['user', 'follower']
+    return ['userId', 'articleId']
   }
 
   static get jsonSchema () {
     return {
       type: 'object',
-      required: ['user', 'follower'],
+      required: ['userId', 'articleId'],
       properties: {
-        user: {
+        userId: {
           type: 'integer'
         },
-        follower: {
+        articleId: {
           type: 'integer'
         }
       }
@@ -25,4 +25,4 @@ class Follower extends Model {
   }
 }
 
-module.exports = Follower
+module.exports = Favorite

@@ -15,6 +15,12 @@ const {
   UnauthorizedError
 } = require('./error')
 
+/**
+ * Comparing a given password against a bcrypt hash.
+ * @param  {String} pass Password given by the user
+ * @param  {String} hash Hash retrieved from the DB
+ * @return {[type]}      [description]
+ */
 const comparePassword = async (pass, hash) => {
   return bcrypt.compare(pass, hash)
 }

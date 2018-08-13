@@ -46,6 +46,19 @@ const {
   getBySlug
 } = require('./article')
 
+// comments actions
+const {
+  getComments,
+  newComment,
+  delComment
+} = require('./comment')
+
+// favorites actions
+const {
+  newFavorite,
+  delFavorite
+} = require('./favorite')
+
 // feed action
 const {
   getFeed
@@ -70,6 +83,14 @@ module.exports = handleErrors(
     get('/articles', getArticles),
 
     get('/articles/feed', getFeed),
+
+    get('/articles/:slug/comments', getComments),
+    post('/articles/:slug/comments', newComment),
+    del('/articles/:slug/comments/:id', delComment),
+
+    post('/articles/:slug/favorite', newFavorite),
+    del('/articles/:slug/favorite', delFavorite),
+
     get('/articles/:slug', getBySlug),
 
     get('/*', notFound),
