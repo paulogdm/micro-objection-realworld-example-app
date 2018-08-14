@@ -2,7 +2,7 @@
 const { json } = require('micro')
 
 // bcrypt
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 
 // jwt parser and creation
 const { createJwt } = require('./jwt')

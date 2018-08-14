@@ -6,12 +6,13 @@
   "scripts": {
     "start": "micro",
     "start-dev": "micro-dev",
-    "test": "ava test.js"
+    "test": "ava test.js",
+    "deploy": "now && now alias && now rm micro-example --safe --yes"
   },
   "author": "paulogdm",
   "license": "MIT",
   "dependencies": {
-    "bcrypt": "^3.0.0",
+    "bcryptjs": "^2.4.3",
     "jsonwebtoken": "^8.3.0",
     "knex": "^0.15.2",
     "micro": "^9.3.2",
