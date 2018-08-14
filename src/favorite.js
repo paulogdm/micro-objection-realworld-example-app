@@ -1,7 +1,7 @@
 // jwt parser and creation
 const { verifyJwt } = require('./jwt')
 
-// follower model
+// article model
 const Article = require('./models/Article')
 
 // errors
@@ -10,6 +10,10 @@ const {
   NotFoundError
 } = require('./error')
 
+/**
+ * Finding article by slug.
+ * @param  {String} slug
+ */
 const findBySlug = async (slug) => {
   const article = await Article
     .query()
@@ -22,15 +26,27 @@ const findBySlug = async (slug) => {
   return article
 }
 
+/**
+ * Helper that will make sure our queryBuilder
+ * is returning the right stuff.
+ * @param  {Number/String} id
+ * @param  {Object} jwt auth object for context
+ * @return {Article}     article with proper fields
+ */
 const returnableArticle = async (id, jwt) => {
   return Article
     .query()
     .findById(id)
     .context({jwt})
-    .eager('[author(profile), tags(tag)]')
+    .eager('[author(profile), tags]')
     .applyFilter('favorited', 'favoritesCount', 'allFields')
 }
 
+/**
+ * New favorite as requested by user.
+ * @param  {} req
+ * @param  {} res
+ */
 const newFavorite = async (req, res) => {
   const jwt = await verifyJwt(req)
 
@@ -40,6 +56,7 @@ const newFavorite = async (req, res) => {
 
   const article = await findBySlug(req.params.slug)
 
+  // once we fetch the article, just relate it to our user.
   await article
     .$relatedQuery('favoritedBy')
     .relate(jwt.id)
@@ -47,14 +64,23 @@ const newFavorite = async (req, res) => {
   return returnableArticle(article.id, jwt)
 }
 
+/**
+ * Removes one article as favorite.
+ * @param  {} req
+ * @param  {} res
+ * @return {Article}
+ */
 const delFavorite = async (req, res) => {
   const jwt = await verifyJwt(req)
+
   if (!jwt) {
     throw new UnauthorizedError()
   }
 
   const article = await findBySlug(req.params.slug)
 
+  // once we fetch the article, let objection
+  // remove the rows
   await article
     .$relatedQuery('favoritedBy')
     .unrelate()

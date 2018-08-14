@@ -19,16 +19,22 @@ const {
  * Comparing a given password against a bcrypt hash.
  * @param  {String} pass Password given by the user
  * @param  {String} hash Hash retrieved from the DB
- * @return {[type]}      [description]
  */
 const comparePassword = async (pass, hash) => {
   return bcrypt.compare(pass, hash)
 }
 
+/**
+ * handles a login
+ * @param  {} req
+ * @param  {} res
+ */
 const login = async (req, res) => {
   const { user } = await json(req)
 
-  const [fetchedUser] = await User.query().where('email', user.email)
+  const fetchedUser = await User
+    .query()
+    .findOne('email', user.email)
 
   if (!fetchedUser) {
     // instead of NotFound, we throw unauthorized because we don't

@@ -5,6 +5,7 @@ Each floor is a migration file, the elevator itself is a representation of the c
 When the elevator goes up, by invoking `knex migrate:latest`, it moves to several floors up, executing the `up` operation of all those floors.
 When the elevator goes down, by invoking `knex migrate:rollback`, it moves to exaclty one floor bellow, executing the `down` operation of the above floor.
 
+![alt text](./migrations.png "Migrations")
 
 ## Create a new migration
 

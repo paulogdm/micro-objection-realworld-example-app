@@ -3,6 +3,8 @@ const { ValidationError } = require('objection')
 
 /**
  * Handle our error object. Works like a charm with Objection.
+ * For now we map only the errors bellow. But feel free to map
+ * more errors with objection-db-errors!
  * @param  {IncomingMessage} req
  * @param  {IncomingMessage} res
  * @param  {Error} err Error Expected Class or Generic.

@@ -16,39 +16,20 @@ const {
   NotFoundError
 } = require('./error')
 
-const comparePassword = async (pass, hash) => {
-  return bcrypt.compare(pass, hash)
-}
-
+/**
+ * Here we hash our passwords.
+ * @param  {String} pass  password to hash
+ * @return {String}       hash
+ */
 const hashPassword = async (pass) => {
   return bcrypt.hash(pass, 10)
 }
 
-const login = async (req, res) => {
-  const { user } = await json(req)
-
-  const [fetchedUser] = await User
-    .query()
-    .where('email', user.email)
-
-  if (!fetchedUser) {
-    // instead of NotFound, we throw unauthorized because we don't
-    // want our user spoofing emails and asking questions like
-    // "the email xxxxx@xxxxx exists in your service?"
-    throw new UnauthorizedError()
-  }
-
-  const passMatch = await comparePassword(user.password, fetchedUser.hashed_password)
-
-  if (!passMatch) {
-    throw new UnauthorizedError()
-  }
-
-  const token = await createJwt(fetchedUser)
-
-  return {user: Object.assign(fetchedUser.toJSON(), {token})}
-}
-
+/**
+ * Creates a user.
+ * @param  {} req
+ * @param  {} res
+ */
 const createUser = async (req, res) => {
   const { user } = await json(req)
 
@@ -64,6 +45,11 @@ const createUser = async (req, res) => {
   return {user: Object.assign(newUser.toJSON(), {token})}
 }
 
+/**
+ * Updates a user
+ * @param  {} req [description]
+ * @param  {} res [description]
+ */
 const patchUser = async (req, res) => {
   const jwt = await verifyJwt(req)
 
@@ -85,6 +71,11 @@ const patchUser = async (req, res) => {
   return {user: patchedUser}
 }
 
+/**
+ * Fetches a user from our database.
+ * @param  {} req
+ * @param  {} res
+ */
 const getUser = async (req, res) => {
   const jwt = await verifyJwt(req)
 
@@ -96,6 +87,7 @@ const getUser = async (req, res) => {
     .query()
     .findById(jwt.id)
 
+  // if user was deleted
   if (!selectedUser) {
     throw new NotFoundError()
   }
@@ -104,7 +96,6 @@ const getUser = async (req, res) => {
 }
 
 module.exports = {
-  login,
   createUser,
   patchUser,
   getUser

@@ -10,6 +10,11 @@ const {
   NotFoundError
 } = require('./error')
 
+/**
+ * finding user by username
+ * @param  {String} username
+ * @return {User}             User class
+ */
 const findByUsername = async (username) => {
   const user = await User
     .query()
@@ -22,6 +27,11 @@ const findByUsername = async (username) => {
   return user
 }
 
+/**
+ * Deleting a follow entry
+ * @param  {} req
+ * @param  {} res
+ */
 const delFollow = async (req, res) => {
   const jwt = await verifyJwt(req)
 
@@ -29,9 +39,11 @@ const delFollow = async (req, res) => {
     throw new UnauthorizedError()
   }
 
-  const dontWantToFollow = await findByUsername(req.params.username)
+  // target user
+  const user = await findByUsername(req.params.username)
 
-  await dontWantToFollow
+  // just removing the relationshipt between requestor and user
+  await user
     .$relatedQuery('follower')
     .unrelate()
     .where('id', jwt.id)
@@ -39,6 +51,11 @@ const delFollow = async (req, res) => {
   return 'OK'
 }
 
+/**
+ * New follow entry
+ * @param  {} req
+ * @param  {} res
+ */
 const newFollow = async (req, res) => {
   const jwt = await verifyJwt(req)
 
@@ -46,9 +63,9 @@ const newFollow = async (req, res) => {
     throw new UnauthorizedError()
   }
 
-  const wantToFollow = await findByUsername(req.params.username)
+  const user = await findByUsername(req.params.username)
 
-  await wantToFollow
+  await user
     .$relatedQuery('follower')
     .relate(jwt.id)
 

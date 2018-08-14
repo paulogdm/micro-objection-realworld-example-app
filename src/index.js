@@ -1,4 +1,4 @@
-// external libs
+// microrouter functions
 const {
   router,
   get,
@@ -6,7 +6,9 @@ const {
   put,
   del
 } = require('microrouter')
+// micro send()
 const { send } = require('micro')
+// Objection's Model
 const { Model } = require('objection')
 
 // handling errors
@@ -64,8 +66,15 @@ const {
   getFeed
 } = require('./feed')
 
+// tags actions
+const {
+  getTags
+} = require('./tag')
+
+// 404
 const notFound = async (req, res) => send(res, 404, 'Not Found')
 
+// routing
 module.exports = handleErrors(
   router(
     post('/users/login', login),
@@ -92,6 +101,7 @@ module.exports = handleErrors(
     del('/articles/:slug/favorite', delFavorite),
 
     get('/articles/:slug', getBySlug),
+    get('/tags', getTags),
 
     get('/*', notFound),
     post('/*', notFound),

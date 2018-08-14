@@ -257,6 +257,7 @@ const updateBySlug = async (req, res) => {
     oldArticle.slug = await slugMe(article.title)
   }
 
+  // description and body updates
   oldArticle.description = article.description || oldArticle.description
   oldArticle.body = article.body || oldArticle.body
 
@@ -271,6 +272,11 @@ const updateBySlug = async (req, res) => {
   return returnableArticle(id, jwt)
 }
 
+/**
+ * User needs to get articles by slug
+ * @param  {} req
+ * @param  {} res
+ */
 const getBySlug = async (req, res) => {
   const jwt = await verifyJwt(req)
   const { slug } = req.params
@@ -281,7 +287,6 @@ const getBySlug = async (req, res) => {
     .context({jwt})
     .eager('[author(profile), tags]')
     .applyFilter('favorited', 'favoritesCount', 'allFields')
-    .context({jwt})
 
   if (!article) {
     throw new NotFoundError()
