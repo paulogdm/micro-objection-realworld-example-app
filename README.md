@@ -28,6 +28,7 @@ You can import all requests to use with [Insomnia](https://insomnia.rest/) by cl
 [![Deploy to now](https://deploy.now.sh/static/button.svg)](https://deploy.now.sh/?repo=https://github.com/paulogdm/micro-objection-realworld-example-app)
 
 To deploy this example, you just need to type `now`.
+It is advised to take a look at [now secrets](https://zeit.co/docs/getting-started/secrets).
 
 ## WIP Disclaimer
 

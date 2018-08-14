@@ -1,0 +1,8 @@
+{
+  "name": "micro-example",
+  "type": "docker",
+  "scripts": {
+    "start": "micro"
+  },
+  "public": true
+}
