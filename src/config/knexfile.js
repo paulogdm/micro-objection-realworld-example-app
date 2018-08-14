@@ -2,12 +2,12 @@ module.exports = {
   development: {
     client: 'mysql',
     connection: {
-      host: 'realworldapp.cgzvcdvzxooo.us-east-1.rds.amazonaws.com',
-      db: 'realworldapp',
-      database: 'realworldapp',
-      user: 'root',
-      password: 'hRDm1XpOHKsyynnjPJcGUBLzeLLaIqsk',
-      charset: 'utf8',
+      host: '',
+      db: '',
+      database: '',
+      user: '',
+      password: '',
+      charset: '',
       ssl: 'Amazon RDS'
     },
     pool: {

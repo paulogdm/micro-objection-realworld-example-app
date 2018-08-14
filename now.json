@@ -1,5 +1,8 @@
 {
   "name": "micro-example",
   "type": "docker",
+  "features": {
+    "cloud": "v2"
+  },
   "public": true
 }
