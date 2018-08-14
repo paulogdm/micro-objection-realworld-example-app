@@ -4,6 +4,8 @@
   "description": "Micro user service for micro-objection-realworld-example-app",
   "main": "index.js",
   "scripts": {
+    "start": "micro",
+    "start-dev": "micro-dev",
     "test": "ava test.js"
   },
   "author": "paulogdm",

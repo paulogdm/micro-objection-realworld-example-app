@@ -5,14 +5,14 @@ Each floor is a migration file, the elevator itself is a representation of the c
 When the elevator goes up, by invoking `knex migrate:latest`, it moves to several floors up, executing the `up` operation of all those floors.
 When the elevator goes down, by invoking `knex migrate:rollback`, it moves to exaclty one floor bellow, executing the `down` operation of the above floor.
 
-![alt text](./migrations.png "Migrations")
+![migrations](../.github/migrations.png "Migrations")
 
 ## Create a new migration
 
 Assuming you are in `/src/db`
 
 ```shell
-$ knex migrate:make favorite --knexfile ../config/knexfile.js --cwd .
+$ knex migrate:make favorite --knexfile ./src/config/knexfile.js --cwd .
 ```
 
 ## Executing a migration
@@ -20,13 +20,13 @@ $ knex migrate:make favorite --knexfile ../config/knexfile.js --cwd .
 Assuming you are in `/src/db`
 
 ```shell
-$ knex migrate:latest --knexfile ../config/knexfile.js --cwd .
+$ knex migrate:latest --knexfile ./src/config/knexfile.js --cwd .
 ```
 
 Optionally, you can run it with an environment variable:
 
 ```shell
-$ knex migrate:latest --knexfile ../config/knexfile.js --cwd . --env production
+$ knex migrate:latest --knexfile ./src/config/knexfile.js --cwd . --env production
 ```
 
 ## Rolling back
@@ -34,13 +34,13 @@ $ knex migrate:latest --knexfile ../config/knexfile.js --cwd . --env production
 Assuming you are in `/src/db`
 
 ```shell
-$ knex migrate:rollback --knexfile ../config/knexfile.js --cwd .
+$ knex migrate:rollback --knexfile ./src/config/knexfile.js --cwd .
 ```
 
 Optionally, you can run it with an environment variable:
 
 ```shell
-$ knex migrate:rollback --knexfile ../config/knexfile.js --cwd . --env production
+$ knex migrate:rollback --knexfile ./src/config/knexfile.js --cwd . --env production
 ```
 
 ## Sources
