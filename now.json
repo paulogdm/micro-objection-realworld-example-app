@@ -1,8 +1,9 @@
 {
+  "version": 1,
   "name": "micro-example",
   "type": "docker",
   "features": {
-    "cloud": "v2"
+    "cloud": "v1"
   },
   "public": true
 }
